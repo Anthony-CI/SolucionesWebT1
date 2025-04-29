@@ -3,6 +3,8 @@ package com.CoronadoIpanaque.CoronadoIpanaqueController;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +22,7 @@ import com.CoronadoIpanaque.CoronadoIpanaqueServices.IProveedorService;
 
 import lombok.RequiredArgsConstructor;
 
-//http://localhost:9090/producto
+//http://localhost:9090/proveedor
 @RestController
 @RequestMapping("/proveedor")
 @RequiredArgsConstructor
@@ -40,7 +42,37 @@ private final IProveedorService service;
         proveedor obj =  service.findById(id);
         return ResponseEntity.ok(obj);
     }
+    
+    
+    
+    @PostMapping
+    public ResponseEntity<EntityModel<proveedor>> crearProveedor(@RequestBody proveedor proveedor) throws Exception {
+        // Guardar el proveedor primero
+        proveedor obj = service.save(proveedor); // <-- Esto asignará el ID
 
+        // Crear el recurso con HATEOAS
+        EntityModel<proveedor> recurso = EntityModel.of(obj);
+
+        recurso.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProveedorController.class)
+                .findById(obj.getIdProveedor())).withSelfRel());
+
+        recurso.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProveedorController.class)
+                .update(obj.getIdProveedor(), obj)).withRel("actualizar"));
+
+        recurso.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProveedorController.class)
+                .delete(obj.getIdProveedor())).withRel("eliminar"));
+
+        // Devolver con location y body
+        return ResponseEntity.created(
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProveedorController.class)
+                        .findById(obj.getIdProveedor())).toUri())
+                .body(recurso);
+    }
+    
+    
+    
+    
+    /*
     @PostMapping
     public ResponseEntity<proveedor> save(@RequestBody proveedor proveedor) throws Exception{
         proveedor obj =  service.save(proveedor);
@@ -50,7 +82,10 @@ private final IProveedorService service;
                 .buildAndExpand(obj.getIdProveedor()).toUri();
         return ResponseEntity.created(location).build();
     }
-
+    */
+    
+    
+    
     @PutMapping("/{id}")
     public ResponseEntity<proveedor> update(@PathVariable("id") Integer id, @RequestBody proveedor proveedor) throws Exception{
         proveedor obj =  service.update(proveedor, id);
@@ -63,4 +98,5 @@ private final IProveedorService service;
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
 }
