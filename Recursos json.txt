@@ -1,0 +1,42 @@
+Recursos json
+
+
+
+
+PROVEEDOR
+{
+  "id": 3,
+  "nombreProveedor": "AJE",
+  "rucProveedor": "7854558",
+  "categoria": "Liquidos",
+  "tipoProductoProveedor": "no perecible",
+  "fechaIngreso": "2025-05-15",
+  "_links": {
+    "self": { "href": "http://localhost:9090/proveedor/3" },
+    "actualizar": { "href": "http://localhost:9090/proveedor/3" },
+    "eliminar": { "href": "http://localhost:9090/proveedor/3" }
+  }
+}
+
+
+PRODUCTO
+{
+  "idProducto": 3,
+  "nombreProducto": "inka kola 500ml",
+  "sku": 478541,
+  "categoria": "Liquidos",
+  "tipoProducto": "no perecible",
+  "fechaVencimiento": "2025-05-15",
+  "_links": {
+    "self": {
+      "href": "http://localhost:9090/producto/3"
+    },
+    "actualizar": {
+      "href": "http://localhost:9090/producto/3"
+    },
+    "eliminar": {
+      "href": "http://localhost:9090/producto/3"
+    }
+  }
+}
+
